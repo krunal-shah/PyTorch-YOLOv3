@@ -16,6 +16,8 @@ from skimage.transform import resize
 
 import sys
 
+import csv
+
 class ImageFolder(Dataset):
     def __init__(self, folder_path, img_size=416):
         self.files = sorted(glob.glob('%s/*.*' % folder_path))
@@ -53,6 +55,28 @@ class ListDataset(Dataset):
         self.label_files = [path.replace('images', 'labels').replace('.png', '.txt').replace('.jpg', '.txt') for path in self.img_files]
         self.img_shape = (img_size, img_size)
         self.max_objects = 50
+        self.dict = {}
+
+        drive_location = 'drive/My Drive/train_data/'
+        cow_location = drive_location + 'cow/train/img'
+        dog_location = drive_location + 'dog/train/img'
+
+        with open(cow_location + "annotation.csv", "r") as csv_file:
+            reader = csv.reader(csv_file, delimiter = ",")
+            for i, row in enumerate(reader):
+                if row[0] in dict:
+                    dict[row[0]].append([])
+                else:
+                    dict[row[0]] = []
+
+        with open(dog_location + "annotation.csv", "r") as csv_file:
+            reader = csv.reader(csv_file, delimiter = ",")
+            for i, row in enumerate(reader):
+                if row[0] in dict:
+                    dict[row[0]].append([])
+                else:
+                    dict[row[0]] = []
+
 
     def __getitem__(self, index):
 
